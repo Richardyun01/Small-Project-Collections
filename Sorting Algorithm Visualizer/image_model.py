@@ -4,9 +4,13 @@ from PIL import Image, ImageTk
 from sorter import get_sort_generator
 
 
+MAX_IMAGE_SIZE = 1000
+
+
 class ImageSorterModel:
     def __init__(self, num_slices=50):
         self.num_slices = num_slices
+
         self.image = None
         self.width = 0
         self.height = 0
@@ -19,8 +23,20 @@ class ImageSorterModel:
         self.sort_method = name
 
     def load_image(self, path):
-        self.image = Image.open(path).convert("RGB")
-        self.width, self.height = self.image.size
+        img = Image.open(path).convert("RGB")
+        orig_w, orig_h = img.size
+
+        max_dim = max(orig_w, orig_h)
+        if max_dim > MAX_IMAGE_SIZE:
+            scale = MAX_IMAGE_SIZE / max_dim
+            new_w = int(orig_w * scale)
+            new_h = int(orig_h * scale)
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+        else:
+            new_w, new_h = orig_w, orig_h
+
+        self.image = img
+        self.width, self.height = new_w, new_h
 
         self.slice_width = max(1, self.width // self.num_slices)
         self.num_slices = self.width // self.slice_width

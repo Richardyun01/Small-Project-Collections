@@ -15,18 +15,13 @@ This program supports
 - Heap sort
 - and Radix sort.
 
-## How to run
-1. Install the packages with requirement.txt. (Virtual environment is recommended.)
-```
-pip install -r requirements.txt
-```
+You can also add sound file to play every iteration!
 
-2. Run the app.py.
+There is also an secret image hidden somewhere...
+
+## How to run
+
+1. Run the app.py.
 ```
 python3 app.py
-```
-
-3. For someone who want to run test code:
-```
-python -m unittest test.{file_name_without_.py}
 ```

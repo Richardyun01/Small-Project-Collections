@@ -4,6 +4,11 @@ from tkinter import filedialog, messagebox
 from image_model import ImageSorterModel
 from sorter import SORT_ALGORITHMS, ALGO_DESCRIPTIONS
 
+try:
+    import winsound
+except ImportError:
+    winsound = None
+
 
 PLACEHOLDER_ALGO = "Select Algorithm"
 HIDDEN_IMAGE_PATH = "assets/hidden.png"
@@ -20,6 +25,9 @@ class ImageSortApp:
         self.sort_after_id = None
 
         self.shuffle_easter_count = 0
+
+        self.step_sound_path = None
+        self.sound_stop_after_id = None
 
         self._build_ui()
 
@@ -94,6 +102,14 @@ class ImageSortApp:
         )
         self.btn_shuffle.pack(fill="x", pady=5)
 
+        self.btn_sound = tk.Button(
+            right_frame,
+            text="Select Step Sound",
+            command=self.on_select_step_sound,
+            **btn_style,
+        )
+        self.btn_sound.pack(fill="x", pady=5)
+
         self.desc_label = tk.Label(
             right_frame,
             text="",
@@ -143,6 +159,7 @@ class ImageSortApp:
 
     def on_algorithm_change(self, *args):
         self._reset_shuffle_easter()
+        self._stop_all_sounds()
 
         name = self.sort_var.get()
         if name in ALGO_DESCRIPTIONS:
@@ -152,6 +169,7 @@ class ImageSortApp:
 
     def on_load_image(self):
         self._reset_shuffle_easter()
+        self._stop_all_sounds()
 
         filetypes = [
             ("Image files", "*.png *.jpg *.jpeg *.bmp *.gif"),
@@ -185,6 +203,7 @@ class ImageSortApp:
 
     def on_start_sort(self):
         self._reset_shuffle_easter()
+        self._stop_all_sounds()
 
         if self.sorting:
             return
@@ -208,6 +227,8 @@ class ImageSortApp:
         self._schedule_next_sort_step()
 
     def on_shuffle(self):
+        self._stop_all_sounds()
+
         if not self.model.strips:
             self.shuffle_easter_count += 1
 
@@ -229,6 +250,51 @@ class ImageSortApp:
             text="The image is mixed. Select an algorithm and press 'Sorting Start'."
         )
 
+    def on_select_step_sound(self):
+        filetypes = [
+            ("WAV files", "*.wav"),
+            ("All files", "*.*"),
+        ]
+        path = filedialog.askopenfilename(
+            title="Choose step sound file", filetypes=filetypes
+        )
+        if not path:
+            return
+
+        self.step_sound_path = path
+        self.status_label.config(text=f"Step sound set: {path}")
+
+    def _play_step_sound(self):
+        if not self.step_sound_path:
+            return
+        if winsound is None:
+            return
+
+        try:
+            winsound.PlaySound(
+                self.step_sound_path, winsound.SND_FILENAME | winsound.SND_ASYNC
+            )
+            if self.sound_stop_after_id is not None:
+                self.root.after_cancel(self.sound_stop_after_id)
+            self.sound_stop_after_id = self.root.after(30000, self._stop_all_sounds)
+        except Exception as e:
+            print(f"Error playing sound: {e}")
+
+    def _stop_all_sounds(self):
+        if winsound is None:
+            return
+        try:
+            winsound.PlaySound(None, winsound.SND_PURGE)
+        except Exception as e:
+            print(f"Error stopping sound: {e}")
+        finally:
+            if self.sound_stop_after_id is not None:
+                try:
+                    self.root.after_cancel(self.sound_stop_after_id)
+                except Exception:
+                    pass
+                self.sound_stop_after_id = None
+
     # ---------------- Sort Animation Loop ----------------
 
     def _schedule_next_sort_step(self):
@@ -237,6 +303,8 @@ class ImageSortApp:
 
         still_sorting = self.model.step_sort()
         self._draw_image()
+
+        self._play_step_sound()
 
         if still_sorting:
             self.sort_after_id = self.root.after(10, self._schedule_next_sort_step)
@@ -255,14 +323,28 @@ class ImageSortApp:
 
     def _draw_image(self):
         self.canvas.delete("all")
+
+        self.canvas.update_idletasks()
+        canvas_w = self.canvas.winfo_width()
+        canvas_h = self.canvas.winfo_height()
+
+        img_w, img_h = self.model.get_canvas_size()
+
+        offset_x = max((canvas_w - img_w) // 2, 0)
+        offset_y = max((canvas_h - img_h) // 2, 0)
+
         for strip in self.model.get_strips_for_draw():
             self.canvas.create_image(
-                strip["x"], 0, anchor="nw", image=strip["tk_image"]
+                strip["x"] + offset_x,
+                offset_y,
+                anchor="nw",
+                image=strip["tk_image"],
             )
 
 
 def main():
     root = tk.Tk()
+    root.minsize(600, 500)
     app = ImageSortApp(root)
     root.mainloop()
 
