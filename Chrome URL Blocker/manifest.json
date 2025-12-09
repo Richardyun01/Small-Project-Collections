@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "도메인 리다이렉트 확장 프로그램",
+  "version": "1.0",
+  "description": "여러 개의 도메인과 서브도메인을 리다이렉트합니다.",
+  "permissions": ["declarativeNetRequest", "storage"],
+  "host_permissions": [
+    "*://*.test.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

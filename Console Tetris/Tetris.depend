@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1707196280 source:c:\users\syyun\desktop\programming\tetris\block.cpp
+	"Block.h"
+
+1707195775 c:\users\syyun\desktop\programming\tetris\block.h
+
+1707205645 source:c:\users\syyun\desktop\programming\tetris\main.cpp
+	<iostream>
+	<conio.h>
+	<stdlib.h>
+	"Common.h"
+	"Board.h"
+
+1707199182 c:\users\syyun\desktop\programming\tetris\common.h
+
+1707196439 c:\users\syyun\desktop\programming\tetris\board.h
+	"Block.h"
+
+1707203100 source:c:\users\syyun\desktop\programming\tetris\board.cpp
+	<iostream>
+	<conio.h>
+	<stdio.h>
+	<stdlib.h>
+	"Common.h"
+	"Board.h"
+

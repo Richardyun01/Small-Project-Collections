@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1698407257 source:d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob1\inf_int\main.cpp
+	"inf_int.h"
+	<iostream>
+	<sstream>
+	<ctime>
+
+1698365087 d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob1\inf_int\inf_int.h
+	<iostream>
+	<string>
+
+1698407502 source:d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob1\inf_int\inf_int.cpp
+	"inf_int.h"
+	<algorithm>
+
+1698409085 source:d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob2\inf_int\inf_int.cpp
+	"inf_int.h"
+	<algorithm>
+
+1698365087 d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob2\inf_int\inf_int.h
+	<iostream>
+	<string>
+
+1698640822 source:d:\school homework\2-2\20202865_소프트웨어학부_윤수용_객체지향_proj2\prob2\inf_int\main.cpp
+	"inf_int.h"
+	<iostream>
+
