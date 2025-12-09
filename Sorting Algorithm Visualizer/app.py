@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import os
 
 from image_model import ImageSorterModel
 from sorter import SORT_ALGORITHMS, ALGO_DESCRIPTIONS
@@ -102,6 +103,16 @@ class ImageSortApp:
         )
         self.btn_shuffle.pack(fill="x", pady=5)
 
+        self.step_sound_label = tk.Label(
+            right_frame,
+            text="No step sound selected",
+            font=("Arial", 8),
+            anchor="w",
+            justify="left",
+            wraplength=230,
+        )
+        self.step_sound_label.pack(fill="x", pady=(8, 0))
+
         self.btn_sound = tk.Button(
             right_frame,
             text="Select Step Sound",
@@ -148,6 +159,8 @@ class ImageSortApp:
 
         w, h = self.model.get_canvas_size()
         self.canvas.config(width=w, height=h)
+
+        self.canvas.delete("all")
         self._draw_image()
 
         self.btn_sort.config(state=tk.NORMAL)
@@ -192,6 +205,7 @@ class ImageSortApp:
         w, h = self.model.get_canvas_size()
         self.canvas.config(width=w, height=h)
 
+        self.canvas.delete("all")
         self._draw_image()
 
         self.btn_sort.config(state=tk.NORMAL)
@@ -250,6 +264,18 @@ class ImageSortApp:
             text="The image is mixed. Select an algorithm and press 'Sorting Start'."
         )
 
+    def _shorten_filename(self, path: str, max_len: int = 15) -> str:
+        if not path:
+            return "No step sound selected"
+
+        name = os.path.basename(path)
+        if len(name) <= max_len:
+            return name
+
+        head_len = max_len // 2 - 3
+        tail_len = max_len - head_len - 3
+        return f"{name[:head_len]}...{name[-tail_len:]}"
+
     def on_select_step_sound(self):
         filetypes = [
             ("WAV files", "*.wav"),
@@ -261,8 +287,10 @@ class ImageSortApp:
         if not path:
             return
 
-        self.step_sound_path = path
-        self.status_label.config(text=f"Step sound set: {path}")
+        short_name = self._shorten_filename(path)
+        self.step_sound_label.config(text=f"Step sound: {short_name}")
+
+        self.status_label.config(text="Step sound file selected.")
 
     def _play_step_sound(self):
         if not self.step_sound_path:
@@ -322,7 +350,7 @@ class ImageSortApp:
     # ---------------- Draw Canvas ----------------
 
     def _draw_image(self):
-        self.canvas.delete("all")
+        # self.canvas.delete("all")
 
         self.canvas.update_idletasks()
         canvas_w = self.canvas.winfo_width()
@@ -334,17 +362,26 @@ class ImageSortApp:
         offset_y = max((canvas_h - img_h) // 2, 0)
 
         for strip in self.model.get_strips_for_draw():
-            self.canvas.create_image(
-                strip["x"] + offset_x,
-                offset_y,
-                anchor="nw",
-                image=strip["tk_image"],
-            )
+            x = strip["x"] + offset_x
+            y = offset_y
+
+            item_id = strip.get("item_id")
+
+            if item_id is None:
+                item_id = self.canvas.create_image(
+                    x,
+                    y,
+                    anchor="nw",
+                    image=strip["tk_image"],
+                )
+                strip["item_id"] = item_id
+            else:
+                self.canvas.coords(item_id, x, y)
 
 
 def main():
     root = tk.Tk()
-    root.minsize(600, 500)
+    root.minsize(600, 550)
     app = ImageSortApp(root)
     root.mainloop()
 

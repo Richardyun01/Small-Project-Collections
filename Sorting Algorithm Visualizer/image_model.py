@@ -52,6 +52,7 @@ class ImageSorterModel:
                     "tk_image": tk_img,
                     "original_index": i,
                     "x": i * self.slice_width,
+                    "item_id": None,
                 }
             )
 
