@@ -85,6 +85,20 @@ class ImageSortApp:
         )
         self.btn_load.pack(fill="x", pady=5)
 
+        self.speed_scale = tk.Scale(
+            right_frame,
+            from_=10,
+            to=1000,
+            orient=tk.HORIZONTAL,
+            resolution=10,
+        )
+        self.speed_scale.set(100)
+        self.speed_scale.pack(fill="x", pady=(0, 10))
+
+        tk.Label(right_frame, text="Step Delay (ms):", font=("Arial", 10, "bold")).pack(
+            anchor="w", pady=(10, 0)
+        )
+
         self.btn_sort = tk.Button(
             right_frame,
             text="Sorting Start",
@@ -287,6 +301,8 @@ class ImageSortApp:
         if not path:
             return
 
+        self.step_sound_path = path
+
         short_name = self._shorten_filename(path)
         self.step_sound_label.config(text=f"Step sound: {short_name}")
 
@@ -294,11 +310,14 @@ class ImageSortApp:
 
     def _play_step_sound(self):
         if not self.step_sound_path:
+            # print("No step sound path set.")
             return
         if winsound is None:
+            # print("winsound module not available.")
             return
 
         try:
+            # print("Playing sound:", self.step_sound_path)
             winsound.PlaySound(
                 self.step_sound_path, winsound.SND_FILENAME | winsound.SND_ASYNC
             )
@@ -335,7 +354,8 @@ class ImageSortApp:
         self._play_step_sound()
 
         if still_sorting:
-            self.sort_after_id = self.root.after(10, self._schedule_next_sort_step)
+            delay = self.speed_scale.get()
+            self.sort_after_id = self.root.after(delay, self._schedule_next_sort_step)
         else:
             self.sorting = False
             self.sort_after_id = None
@@ -381,7 +401,7 @@ class ImageSortApp:
 
 def main():
     root = tk.Tk()
-    root.minsize(600, 550)
+    root.minsize(600, 600)
     app = ImageSortApp(root)
     root.mainloop()
 

@@ -13,11 +13,11 @@ Feel free to search, copy, and use it as you want.
 |[Console Tetris](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Console%20Tetris)|Simple console Tetris game.|C++|2024.02|
 |[Infinite Integer Test](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Infinite%20Integer%20Test)|Short infinite integer testing program.|C++|2023.04|
 |[MBTI Tester](https://github.com/Richardyun01/Small-Project-Collections/tree/main/MBTI%20Tester)|Simple console MBTI tester written in Korean.|C|2021.04|
+|[PDF Merger](https://github.com/Richardyun01/Small-Project-Collections/tree/main/PDF%20Merger)|Multiple PDF files merging program with GUI.|Python|2025.12|
 |[Recursive Parser](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Recursive%20Parser)|Not-short but simple recursive parsing program.|C++|2023.11|
 |[Sequence Matcher in Java](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Sequence%20Matcher%20in%20Java)|SequenceMatcher module algorithm imported to Java.|Java|2024.10|
 |[Sorting Algorithm Visualizer](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Sorting%20Algorithm%20Visualizer)|Visualizes sorting algorithm from images with GUI.|Python|2025.12|
 
 ## TODOs
-- PDF Merger: Merge Multiple PDF files without using suspcious websites.
 - Random Skill Tree Generator: Start with initial value, width, depth, end value as a input and generate a random skill tree on the grid(Can select up->down or left-right).
 - .gitignore Merger: Merge multiple .gitignore files with avoiding redundant lines.
