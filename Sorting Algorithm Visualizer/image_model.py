@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from sorter import get_sort_generator
 
 
-MAX_IMAGE_SIZE = 1000
+MAX_IMAGE_SIZE = 900
 
 
 class ImageSorterModel:

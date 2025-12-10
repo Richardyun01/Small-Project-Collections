@@ -30,6 +30,9 @@ class ImageSortApp:
         self.step_sound_path = None
         self.sound_stop_after_id = None
 
+        self.step_counter = 0
+        self.sound_step_interval = 5
+
         self._build_ui()
 
     def _build_ui(self):
@@ -251,6 +254,8 @@ class ImageSortApp:
         self.status_label.config(text=f"{selected_algorithm} Sorting...")
         self.sorting = True
 
+        self.step_counter = 0
+
         self.model.create_sort_generator()
         self._schedule_next_sort_step()
 
@@ -351,12 +356,17 @@ class ImageSortApp:
         still_sorting = self.model.step_sort()
         self._draw_image()
 
-        self._play_step_sound()
+        # self._play_step_sound()
 
         if still_sorting:
+            self.step_counter += 1
+            if self.step_counter % self.sound_step_interval == 0:
+                self._play_step_sound()
+
             delay = self.speed_scale.get()
             self.sort_after_id = self.root.after(delay, self._schedule_next_sort_step)
         else:
+            self._play_step_sound()
             self.sorting = False
             self.sort_after_id = None
             self.status_label.config(text="Sorting Complete!")
