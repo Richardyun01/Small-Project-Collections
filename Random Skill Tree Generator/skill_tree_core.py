@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
 
-NodeId = Tuple[int, int]  # (level, index)
-Edge = Tuple[NodeId, NodeId]  # ((L1, i1), (L2, i2))
+NodeId = Tuple[int, int]
+Edge = Tuple[NodeId, NodeId]
 
 
 @dataclass
@@ -17,23 +17,19 @@ class TreeConfig:
     height: int
     max_width: int
     extra_edge_prob: float = 0.3
-    max_index_diff: Optional[int] = None  # None이면 인덱스 거리 제약 없음
+    max_index_diff: Optional[int] = None
 
 
 class SkillTree:
-    """트리의 레벨/간선 데이터와 생성 규칙을 캡슐화."""
-
     def __init__(self, config: TreeConfig) -> None:
         self.config = config
         self.levels: List[List[str]] = []
         self.edges: List[Edge] = []
 
-    # --------- 외부에 노출되는 메인 메서드 --------- #
     def generate(self) -> None:
         self.levels = self._generate_levels()
         self.edges = self._generate_random_edges()
 
-    # --------- 내부: 레벨 생성 --------- #
     def _generate_levels(self) -> List[List[str]]:
         c = self.config
 
@@ -55,19 +51,15 @@ class SkillTree:
             raise ValueError("Width too large. Maximum is 30.")
 
         levels: List[List[str]] = []
-        # 첫 레벨
         levels.append([f"L0_N{i}" for i in range(c.start_count)])
 
-        # 중간 레벨
         for h in range(1, c.height - 1):
             count = random.randint(1, c.max_width)
             levels.append([f"L{h}_N{i}" for i in range(count)])
 
-        # 마지막 레벨
         levels.append([f"L{c.height - 1}_N{i}" for i in range(c.end_count)])
         return levels
 
-    # --------- 내부: 간선 생성 --------- #
     def _generate_random_edges(self) -> List[Edge]:
         if not self.levels:
             raise RuntimeError("Levels are empty. Call generate() first.")
@@ -91,7 +83,6 @@ class SkillTree:
             num_parents = len(levels[L])
             num_children = len(levels[L + 1])
 
-            # 각 부모가 최소 1개의 자식
             for i in range(num_parents):
                 if max_index_diff is not None:
                     candidate_children = [
@@ -100,7 +91,6 @@ class SkillTree:
                 else:
                     candidate_children = list(range(num_children))
 
-                # 제약 때문에 후보가 없으면 전체 자식 중 랜덤
                 if not candidate_children:
                     candidate_children = list(range(num_children))
 
@@ -110,7 +100,6 @@ class SkillTree:
                 parent_count[(L + 1, j)] += 1
                 child_count[(L, i)] += 1
 
-            # 각 자식이 최소 1개의 부모
             for j in range(num_children):
                 if parent_count[(L + 1, j)] == 0:
                     if max_index_diff is not None:
@@ -122,7 +111,6 @@ class SkillTree:
                     else:
                         candidate_parents = list(range(num_parents))
 
-                    # 제약으로 후보가 0개면 전체 부모에서 선택
                     if not candidate_parents:
                         candidate_parents = list(range(num_parents))
 
@@ -132,7 +120,6 @@ class SkillTree:
                     parent_count[(L + 1, j)] += 1
                     child_count[(L, i)] += 1
 
-            # 추가 랜덤 간선
             for i in range(num_parents):
                 for j in range(num_children):
                     if max_index_diff is not None and abs(i - j) > max_index_diff:
@@ -148,7 +135,6 @@ class SkillTree:
         return edges
 
 
-# --------- 위치 계산 + 렌더링 --------- #
 def _compute_positions(
     levels: List[List[str]],
     node_size: float = 0.6,
@@ -197,8 +183,6 @@ def _compute_positions(
 
 
 class SkillTreeRenderer:
-    """SkillTree 객체를 matplotlib Figure로 그리는 책임만 담당."""
-
     def create_figure(
         self,
         tree: SkillTree,
@@ -233,7 +217,6 @@ class SkillTreeRenderer:
         edge_factor = 0.05 * spacing_scale
         max_gap = 5.0 * spacing_scale
 
-        # 레벨 별 간선 수
         edges_by_layer_count = {(L, L + 1): 0 for L in range(num_layers - 1)}
         for (L1, _i1), (L2, _i2) in edges:
             if L2 == L1 + 1:
@@ -275,7 +258,6 @@ class SkillTreeRenderer:
 
         fig, ax = plt.subplots(figsize=(fig_w, fig_h))
 
-        # 노드
         for (L, i), (x, y) in positions.items():
             rect = Rectangle(
                 (x - node_size / 2, y - node_size / 2),
@@ -295,13 +277,11 @@ class SkillTreeRenderer:
                 fontsize=fontsize,
             )
 
-        # 간선 그룹화
         edges_group = {}
         for (L1, i1), (L2, i2) in edges:
             key = (L1, L2)
             edges_group.setdefault(key, []).append(((L1, i1), (L2, i2)))
 
-        # 간선 그리기
         if orientation in ("top_down", "bottom_up"):
             vertical_spacing = 0.25 * spacing_scale
             margin_y = 0.05 * spacing_scale

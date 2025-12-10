@@ -11,21 +11,16 @@ class TreeGUI:
         self.root = root
         root.title("Random Skill Tree Generator")
 
-        # 렌더러 (재사용)
         self.renderer = SkillTreeRenderer()
 
-        # 현재 트리 상태
         self.current_tree: SkillTree | None = None
         self.current_orientation: str = "top_down"
 
-        # 미리보기 캔버스
         self.preview_canvas: FigureCanvasTkAgg | None = None
         self.preview_size = 400
 
-        # 레이아웃
         self._build_layout()
 
-    # --------- 레이아웃 구성 --------- #
     def _build_layout(self):
         container = ttk.Frame(self.root)
         container.grid(row=0, column=0, sticky="nsew")
@@ -35,7 +30,6 @@ class TreeGUI:
         container.columnconfigure(0, weight=0)
         container.columnconfigure(1, weight=1)
 
-        # 좌측: 미리보기 프레임
         self.preview_frame = ttk.Frame(
             container,
             width=self.preview_size,
@@ -45,7 +39,6 @@ class TreeGUI:
         self.preview_frame.grid(row=0, column=0, padx=(10, 5), pady=10, sticky="n")
         self.preview_frame.grid_propagate(False)
 
-        # 우측: 컨트롤 UI
         main = ttk.Frame(container, padding=10)
         main.grid(row=0, column=1, sticky="nsew")
         main.columnconfigure(1, weight=1)
@@ -116,7 +109,6 @@ class TreeGUI:
         self.status_label = ttk.Label(main, text="Ready")
         self.status_label.grid(row=7, column=0, columnspan=2, sticky="w")
 
-    # --------- 입력 → TreeConfig 빌드 --------- #
     def _build_config_from_inputs(self) -> TreeConfig | None:
         try:
             start_count = int(self.start_var.get())
@@ -152,7 +144,6 @@ class TreeGUI:
         )
         return config
 
-    # --------- 미리보기 버튼 --------- #
     def on_preview(self):
         config = self._build_config_from_inputs()
         if config is None:
@@ -162,7 +153,7 @@ class TreeGUI:
 
         try:
             tree = SkillTree(config)
-            tree.generate()  # levels & edges 생성
+            tree.generate()
             fig = self.renderer.create_figure(
                 tree,
                 orientation=orientation,
@@ -178,12 +169,10 @@ class TreeGUI:
         self.current_tree = tree
         self.current_orientation = orientation
 
-        # 이전 미리보기 제거
         if self.preview_canvas is not None:
             self.preview_canvas.get_tk_widget().destroy()
             self.preview_canvas = None
 
-        # 새 미리보기
         self.preview_canvas = FigureCanvasTkAgg(fig, master=self.preview_frame)
         self.preview_canvas.draw()
         widget = self.preview_canvas.get_tk_widget()
@@ -192,7 +181,6 @@ class TreeGUI:
 
         self.status_label.config(text="Preview updated")
 
-    # --------- 저장 버튼 --------- #
     def on_save(self):
         if self.current_tree is None:
             messagebox.showwarning("No Tree", "Please generate a preview first.")
