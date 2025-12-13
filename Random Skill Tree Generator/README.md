@@ -6,6 +6,8 @@ Written by Python3 and scikit-learn.
 ## What it can do
 Not sure how to make a proper skill tree?
 
+<img width="1127" height="602" alt="Pic 2025-12-14 065714" src="https://github.com/user-attachments/assets/67fee162-30c6-4a51-b9b5-a7c5bc3e38f7" />
+
 Start with this random skill tree generator and boost your imagination!
 
 All you need is:
