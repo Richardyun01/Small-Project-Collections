@@ -11,7 +11,7 @@ Feel free to search, copy, and use it as you want.
 |[Chrome URL Blocker](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Chrome%20URL%20Blocker)|Simple URL blocking Chrome extension to increase productivity.|Javascript|2025.04|
 |[Console Minesweeper](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Console%20Minesweeper)|Simple console Minesweeping game.|C++|2024.02|
 |[Console Tetris](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Console%20Tetris)|Simple console Tetris game.|C++|2024.02|
-|gitignore Maker|Creates custom gitignore file supported with GUI.|Python|2025.12|
+|[Gitignore Maker](https://github.com/Richardyun01/Small-Project-Collections/tree/main/gitignore%20Maker)|Creates custom gitignore file supported with GUI.|Python|2025.12|
 |[Infinite Integer Test](https://github.com/Richardyun01/Small-Project-Collections/tree/main/Infinite%20Integer%20Test)|Short infinite integer testing program.|C++|2023.04|
 |[MBTI Tester](https://github.com/Richardyun01/Small-Project-Collections/tree/main/MBTI%20Tester)|Simple console MBTI tester written in Korean.|C|2021.04|
 |[PDF Merger](https://github.com/Richardyun01/Small-Project-Collections/tree/main/PDF%20Merger)|Multiple PDF files merging program with GUI.|Python, PyPDF|2025.12|
