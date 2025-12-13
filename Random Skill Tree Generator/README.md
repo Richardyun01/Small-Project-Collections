@@ -24,7 +24,7 @@ You can generate the skill trees until you get what you want, and download it!
 python -m venv venv
 ```
 
-2. Run the app.py.
+2. Run the app.py in the virtual environment.
 ```
 python app.py
 ```

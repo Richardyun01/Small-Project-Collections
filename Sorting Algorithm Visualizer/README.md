@@ -28,7 +28,7 @@ There is also an secret image hidden somewhere...
 python -m venv venv
 ```
 
-2. Run the app.py.
+2. Run the app.py in the virtual environment.
 ```
 python3 app.py
 ```

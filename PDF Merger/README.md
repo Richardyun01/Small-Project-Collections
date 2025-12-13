@@ -20,7 +20,7 @@ python -m venv venv
 pip install pypdf
 ```
 
-3. Run the app.py.
+3. Run the app.py in the virtual environment.
 ```
 python app.py
 ```
